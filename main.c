@@ -50,6 +50,8 @@ enable */
 #define GPIO_BSRR_RST(n) (1 << (n + 16))
 
 
+static uint32_t led_status;
+
 int main(int argc, char *argv[])
 {
     uint32_t reg;
@@ -63,10 +65,12 @@ int main(int argc, char *argv[])
 
     while(1)
     {
-        *pGPIOC_BSRR = GPIO_BSRR_SET(13);
-        for(uint32_t i = 0; i < LED_DELAY; i++);
-        *pGPIOC_BSRR = GPIO_BSRR_RST(13);
-        for(uint32_t i = 0; i < LED_DELAY; i++);
+        *pGPIOC_BSRR = GPIO_BSRR13_SET;
+        led_status = 0;
+        for (uint32_t i = 0; i < LED_DELAY; i++);
+        *pGPIOC_BSRR = GPIO_BSRR13_RESET;
+        led_status = 1;
+        for (uint32_t i = 0; i < LED_DELAY; i++);
     }
     /* Nao deveria chegar aqui */
     return EXIT_SUCCESS;
