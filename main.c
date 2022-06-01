@@ -51,6 +51,9 @@ enable */
 
 
 static uint32_t led_status;
+static char fw_version[] = {'V', '1', '.', '0'};
+static uint32_t led_status;
+
 
 int main(int argc, char *argv[])
 {
