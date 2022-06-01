@@ -4,16 +4,17 @@
 #define STACK_START SRAM_END /* Inicio da Stack */
 #include <stdint.h>
 
-void reset_handler(void);
-void nmi_handler (void) __attribute__ ((alias("default_handler")));
-void hardfault_handler (void) __attribute__ ((alias("default_handler")));
-void memmanage_handler (void) __attribute__ ((alias("default_handler")));
-void busfault_handler (void) __attribute__ ((alias("default_handler")));
-void usagefault_handler(void) __attribute__ ((alias("default_handler")));
-void svc_handler (void) __attribute__ ((alias("default_handler")));
-void debugmon_handler (void) __attribute__ ((alias("default_handler")));
-void pendsv_handler (void) __attribute__ ((alias("default_handler")));
-void systick_handler (void) __attribute__ ((alias("default_handler")));
+void reset_handler (void);
+void nmi_handler (void) __attribute__ ((weak, alias("default_handler")));
+void hardfault_handler (void) __attribute__ ((weak, alias("default_handler")));
+void memmanage_handler (void) __attribute__ ((weak, alias("default_handler")));
+void busfault_handler (void) __attribute__ ((weak, alias("default_handler")));
+void usagefault_handler(void) __attribute__ ((weak, alias("default_handler")));
+void svc_handler (void) __attribute__ ((weak, alias("default_handler")));
+void debugmon_handler (void) __attribute__ ((weak, alias("default_handler")));
+void pendsv_handler (void) __attribute__ ((weak, alias("default_handler")));
+void systick_handler (void) __attribute__ ((weak, alias("default_handler")));
+
 
 uint32_t vectors[] __attribute__((section(".isr_vectors"))) =
 {
@@ -34,6 +35,7 @@ uint32_t vectors[] __attribute__((section(".isr_vectors"))) =
     (uint32_t)pendsv_handler, /* 0x0000 0038 */
     (uint32_t)systick_handler, /* 0x0000 003c */
 };
+
 
 
 void reset_handler(void)
