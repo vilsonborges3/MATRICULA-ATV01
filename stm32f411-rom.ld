@@ -5,3 +5,71 @@ MEMORY
     FLASH(rx): ORIGIN = 0x08000000, LENGTH = 512K
     SRAM(rwx): ORIGIN = 0x20000000, LENGTH = 128K
 }
+
+SECTIONS
+{
+    /* combinar todas as secoes .isr_vectors de todos arquivos de entrada */
+    /* combinar todas as secoes .text de todos arquivos de entrada */
+    /* combinar todas as secoes .rodata de todos arquivos de entrada */
+    .text :
+    {
+        *(.isr_vectors)
+        *(.text)
+        *(.rodata)
+    }>FLASH
+}
+
+SECTIONS
+{
+    /* combinar todas as secoes .isr_vectors de todos arquivos de entrada */
+    /* combinar todas as secoes .text de todos arquivos de entrada */
+    /* combinar todas as secoes .rodata de todos arquivos de entrada */
+    .text :
+    {
+        KEEP(*(.isr_vectors))
+        *(.text)
+        *(.rodata)
+    }>FLASH
+}
+
+SECTIONS
+{
+    /* combinar todas as secoes .isr_vectors de todos arquivos de entrada */
+    /* combinar todas as secoes .text de todos arquivos de entrada */
+    /* combinar todas as secoes .rodata de todos arquivos de entrada */
+    .text :
+    {
+        KEEP(*(.isr_vectors))
+        *(.text)
+        *(.rodata)
+    }> FLASH
+    /* Esta secao deve incluir a secao .data de todos arquivos objeto de entrada */
+    .data :
+    {
+        *(.data)
+    }> SRAM AT> FLASH
+}
+
+SECTIONS
+{
+    /* combinar todas as secoes .isr_vectors de todos arquivos de entrada */
+    /* combinar todas as secoes .text de todos arquivos de entrada */
+    /* combinar todas as secoes .rodata de todos arquivos de entrada */
+    .text :
+    {
+        KEEP(*(.isr_vectors))
+        *(.text)
+        *(.rodata)
+    }> FLASH
+    /* Esta secao deve incluir a secao .data de todos arquivos objeto de entrada */
+    .data :
+    {
+        *(.data)
+        }> SRAM AT> FLASH
+        /* Esta secao deve incluir a secao .bss de todos arquivos objeto de entrada */
+        .bss :
+    {
+    *(.bss)
+    }> SRAM
+}
+
