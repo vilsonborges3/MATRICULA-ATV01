@@ -4,6 +4,8 @@
 #define STACK_START SRAM_END /* Inicio da Stack */
 #include <stdint.h>
 
+int main(void);
+
 void reset_handler (void);
 void nmi_handler (void) __attribute__ ((weak, alias("default_handler")));
 void hardfault_handler (void) __attribute__ ((weak, alias("default_handler")));
@@ -15,6 +17,13 @@ void debugmon_handler (void) __attribute__ ((weak, alias("default_handler")));
 void pendsv_handler (void) __attribute__ ((weak, alias("default_handler")));
 void systick_handler (void) __attribute__ ((weak, alias("default_handler")));
 
+/* Variaveis exportadas pelo linker script */
+extern uint32_t _sdata; /* Inicio da secao .data */
+extern uint32_t _edata; /* Fim da secao .data */
+extern uint32_t _la_data; /* Endereco de carga na RAM da secao .data */
+extern uint32_t _sbss; /* Inicio da secao .bss */
+extern uint32_t _ebss; /* Fim da secao .bss */
+extern uint32_t _etext;
 
 uint32_t vectors[] __attribute__((section(".isr_vectors"))) =
 {
@@ -40,6 +49,24 @@ uint32_t vectors[] __attribute__((section(".isr_vectors"))) =
 
 void reset_handler(void)
 {
+    uint32_t i;
+    /* Copia a secao .data para a RAM */
+    uint32_t size = (uint32_t)&_edata - (uint32_t)&_sdata;
+    uint8_t *pDst = (uint8_t*)&_sdata; /* SRAM */
+    uint8_t *pSrc = (uint8_t*)&_etext;  /* FLASH */
+    for(i = 0; i < size; i++)
+    {
+        *pDst++ = *pSrc++;
+    }
+    /* Preenche a secao .bss com zero */
+    size = (uint32_t)&_ebss - (uint32_t)&_sbss;
+    pDst = (uint8_t*)&_sbss;
+    for(i = 0 ; i < size; i++)
+    {
+        *pDst++ = 0;
+    }
+    /* Chama a funcao main() */
+    main();
 }
 void default_handler(void)
 {
